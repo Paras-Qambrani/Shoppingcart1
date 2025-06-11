@@ -1,0 +1,48 @@
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header('Location: login.php');
+    exit();
+}
+
+// Items list
+$items = [
+    1 => ["name" => "Samsung Mobile", "price" => 30000],
+    2 => ["name" => "HP Laptop", "price" => 75000],
+    3 => ["name" => "Smart Watch", "price" => 5000]
+];
+
+// Calculate total
+$total = 0;
+$cart_items = "";
+
+if (!empty($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $id => $qty) {
+        $item = $items[$id];
+        $subtotal = $item['price'] * $qty;
+        $total += $subtotal;
+        $cart_items .= "{$item['name']} x $qty = Rs. $subtotal<br>";
+    }
+} else {
+    $cart_items = "Cart is empty.";
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head><title>Checkout</title></head>
+<body>
+<h2>Checkout</h2>
+<a href="home.php">Back to Items</a> | <a href="cart.php">View Cart</a><br><br>
+
+<?= $cart_items ?>
+<hr>
+<strong>Total Bill: Rs. <?= $total ?></strong>
+
+<?php
+// Clear cart
+$_SESSION['cart'] = [];
+?>
+<p>Thank you for shopping!</p>
+</body>
+</html>
